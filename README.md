@@ -18,6 +18,9 @@ The store also allows clients to upload their own designs and to customize them 
   - [Prerequisites](#prerequisites)
   - [Quickstart](#quickstart)
   - [Usage](#usage)
+    - [How to Build the Image](#how-to-build-the-image)
+    - [Docker Run](#docker-run)
+    - [Docker Compose](#docker-compose)
     - [Settings](#settings)
     - [Models](#models)
     - [Brief Explanation of the Views](#brief-explanation-of-the-views)
@@ -30,7 +33,6 @@ The store also allows clients to upload their own designs and to customize them 
     - [Docker](#docker)
     - [Django and DRF](#django-and-drf)
     - [Miscellaneous](#miscellaneous)
-
 ## Prerequisites
 
 * [Python 3.12.0](https://www.python.org/downloads/release/python-3120/)
@@ -81,6 +83,64 @@ python src/manage.py runserver
 ```
 
 ## Usage
+
+### How to Build the Image
+
+Build the Docker image locally:
+
+```bash
+docker build -t truck-signs-api:v1 .
+```
+
+You can verify that the image was created successfully:
+
+```bash
+docker images
+```
+
+### Docker Run
+
+Run the application using Docker:
+
+```bash
+docker run -d \
+  --name truck-signs-api \
+  --env-file .env \
+  -p 8020:8000 \
+  truck-signs-api:v1
+```
+
+The API will then be available at:
+
+```text
+http://localhost:8020
+```
+
+Replace all sensitive values inside the `.env` file with your own configuration.
+
+### Docker Compose
+
+Start all services:
+
+```bash
+docker compose up -d
+```
+
+Stop all services:
+
+```bash
+docker compose down
+```
+
+View logs:
+
+```bash
+docker compose logs -f
+```
+
+The backend service will be available on port `8020`.
+
+The PostgreSQL database is only accessible through the internal Docker network and is not exposed to the host system.
 
 ### Settings
 
@@ -142,11 +202,11 @@ The behavior of some of the views had to be modified to address functionalities 
         ```
     3. For the `postgres` database, the default configuration should be:
         ```bash
-        DB_NAME=trucksigns_db
-        DB_USER=trucksigns_user
-        DB_PASSWORD=supertrucksignsuser!
-        DB_HOST=localhost
-        DB_PORT=5432
+        DB_NAME=<YOUR_DB_NAME>
+        DB_USER=<YOUR_DB_USER>
+        DB_PASSWORD=<YOUR_DB_PASSWORD>
+        DB_HOST=<YOUR_DB_HOST>
+        DB_PORT=<YOUR_DB_PORT>
         ```
     4. The SECRET_KEY is the django secret key. To generate a new one see: [Stackoverflow Link](https://stackoverflow.com/questions/41298963/is-there-a-function-for-generating-settings-secret-key-in-django)
 
