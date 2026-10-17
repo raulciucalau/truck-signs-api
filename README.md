@@ -40,6 +40,163 @@ The store also allows clients to upload their own designs and to customize them 
 
 ## Quickstart
 
+### Prerequisites
+
+- [Git](https://git-scm.com/)
+- [Docker](https://docs.docker.com/get-docker/)
+- Docker Compose
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/raulciucalau/truck-signs-api.git
+cd truck-signs-api
+```
+
+### 2. Configure environment variables
+
+Copy `example.env` to `.env` and configure the required values:
+
+```bash
+cp example.env .env
+```
+
+Do not commit `.env` or sensitive credentials to version control.
+
+### 3. Build the Docker image
+
+```bash
+docker build -t truck-signs-api-backend:1.0.0 .
+```
+
+### 4. Start the application
+
+```bash
+docker compose up -d
+```
+
+### 5. Verify the services
+
+```bash
+docker compose ps
+docker compose logs -f backend
+```
+
+### 6. Access the application
+
+By default, the backend uses port `8020`.
+
+- Django Admin: `http://localhost:8020/admin/`
+- Products API: `http://localhost:8020/truck-signs/products/`
+
+### 7. Stop the application
+
+```bash
+docker compose down
+```
+
+### Prerequisites
+
+Make sure you have installed:
+
+- [Git](https://git-scm.com/install/)
+- [Docker Engine](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### 1. Clone the repository
+
+```bash
+git clone <INSERT URL>
+```
+
+### 2. Configure environment variables
+
+Copy the example environment file:
+
+```bash
+cp example.env .env
+```
+
+Configure the required environment variables in `.env`, including the database credentials, Django secret key, allowed hosts, and backend port.
+
+Example configuration:
+
+```env
+MODE=dev
+DEBUG=True
+SECRET_KEY=replace-with-a-secure-secret-key
+ALLOWED_HOSTS=localhost,127.0.0.1
+DB_NAME=trucksigns_db
+DB_USER=trucksigns_user
+DB_PASSWORD=replace-with-a-secure-password
+DB_HOST=db
+DB_PORT=5432
+POSTGRES_DB=trucksigns_db
+POSTGRES_USER=trucksigns_user
+POSTGRES_PASSWORD=replace-with-a-secure-password
+BACKEND_PORT=8020
+```
+
+Make sure the `DB_*` values match the corresponding `POSTGRES_*` values. Replace example secrets and passwords with your own values. Do not commit `.env` to version control.
+
+### 3. Build the Docker image
+
+Build the backend image using the version specified in `docker-compose.yml`:
+
+```bash
+docker build -t truck-signs-api-backend:1.0.0 .
+```
+
+### 4. Start the application
+
+Start the backend and PostgreSQL database:
+
+```bash
+docker compose up -d
+```
+
+### 5. Verify the services
+
+Check the container status:
+
+```bash
+docker compose ps
+```
+
+View the backend logs:
+
+```bash
+docker compose logs -f backend
+```
+
+### 6. Access the application
+
+The backend is available on the configured host port. The default is `8020`.
+
+- Django Admin: `http://localhost:8020/admin/`
+- Products API: `http://localhost:8020/truck-signs/products/`
+- Categories API: `http://localhost:8020/truck-signs/categories/`
+
+If you change `BACKEND_PORT` in `.env`, use the configured port in the URLs.
+
+### 7. Stop the application
+
+Stop the services:
+
+```bash
+docker compose down
+```
+
+The named volumes preserve database data and configured static and media files when the containers are stopped or recreated.
+
+To remove the volumes as well, run:
+
+```bash
+docker compose down -v
+```
+
+**Warning:** This permanently deletes the data stored in those volumes.
+
 1. Clone the repo:
 ```bash
 git clone git@github.com:Developer-Akademie-DevSecOpsKurs/truck-signs-api.git
