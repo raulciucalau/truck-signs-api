@@ -61,7 +61,8 @@ Copy `example.env` to `.env` and configure the required values:
 cp example.env .env
 ```
 
-Do not commit `.env` or sensitive credentials to version control.
+> [!WARNING]
+> Do not commit `.env` files or sensitive credentials to version control. This could expose secrets and compromise application security.
 
 ### 3. Build the Docker image
 
