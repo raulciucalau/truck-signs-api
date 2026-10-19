@@ -131,7 +131,7 @@ pythonenv*
 **/.venv/
 **/venv/
 venv/
-truck-signs/bin/
+truck-signs/
 
 # Spyder project settings
 .spyderproject
