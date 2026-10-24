@@ -55,7 +55,7 @@ Set the required database credentials, Django secret key,
 values match the corresponding `POSTGRES_*` values and that `DB_HOST=db`
 for the Docker Compose setup.
 
-> \[!IMPORTANT\] Do not commit `.env` or real passwords, tokens, secret
+> [!IMPORTANT] Do not commit `.env` or real passwords, tokens, secret
 > keys, or IP addresses to version control.
 
 3. Build the backend image
