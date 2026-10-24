@@ -18,10 +18,11 @@ The store also allows clients to upload their own designs and to customize them 
   - [Prerequisites](#prerequisites)
   - [Quickstart](#quickstart)
   - [Usage](#usage)
+    - [Docker Compose](#docker-compose)
     - [Settings](#settings)
     - [Models](#models)
     - [Brief Explanation of the Views](#brief-explanation-of-the-views)
-    - [Installation](#installation)
+    - [Installation (Local Development)](#installation-local-development)
   - [Screenshots of the Django Backend Admin Panel](#screenshots-of-the-django-backend-admin-panel)
     - [Mobile View](#mobile-view)
     - [Desktop View](#desktop-view)
@@ -49,54 +50,91 @@ cd truck-signs-api
 cp example.env .env
 ```
 
-3. Create virtual environment:
-```bash
-python -m venv <venv_name>
+Set the required database credentials, Django secret key,
+`ALLOWED_HOSTS`, and `BACKEND_PORT` in `.env`. Ensure that the `DB_*`
+values match the corresponding `POSTGRES_*` values and that `DB_HOST=db`
+for the Docker Compose setup.
+
+> [!IMPORTANT]
+> Do not commit `.env` or real passwords, tokens, secret
+> keys, or IP addresses to version control.
+
+3. Build the backend image
+
+The backend image name and version must match the `image` value in
+`docker-compose.yml`.
+
+``` bash
+docker build -t truck-signs-api-backend:1.0.0 .
 ```
 
-4. Activate virtual environment:
-```bash
-source <venv_name>/scripts/activate
+4. Start the application
+``` bash
+docker compose up -d
 ```
 
-5. Install requirements:
-```bash
-pip install -r requirements.txt
+5. Verify the services
+``` bash
+docker compose ps
+docker compose logs -f backend
 ```
 
-6. Migrate database:
-```bash
-python src/manage.py makemigrations
-python src/manage.py migrate
-```
+6. Access the application
 
-7. Collect static files:
-```bash
-python src/manage.py collectstatic
-```
+The default host port is `8020`, configured through `BACKEND_PORT` in
+`.env`.
 
-8. Start the Python Development Server:
-```bash
-python src/manage.py runserver
-```
+-   Django Admin: `http://localhost:8020/admin/`
+-   Products API: `http://localhost:8020/truck-signs/products/`
+-   Categories API: `http://localhost:8020/truck-signs/categories/`
+
+If `BACKEND_PORT` is changed, use that port in the URLs instead.
 
 ## Usage
 
+### Docker Compose
+
+For initial setup—including configuring `.env`, building the image, starting
+the services, and verifying access—follow the [Quickstart](#quickstart).
+
+To stop the services:
+
+```bash
+docker compose down
+```
+> [!NOTE]
+> PostgreSQL is available to the backend over Docker’s internal network;
+> its database port is not published to the host.
+
+> [!IMPORTANT]
+> Named volumes preserve the database, static files, and media files across
+> container recreation. docker compose down keeps named volumes by default.
+
+> [!CAUTION]
+> docker compose down -v removes named volumes and permanently deletes
+> the data stored in them.
+
 ### Settings
 
-The `settings.py` folder inside the `src/tsa_app` folder contains the different settings configuration for the application.
+The Django settings are located in `src/tsa_app/settings.py`. The
+`example.env` file in the repository root lists the environment
+variables that can be configured.
 
-The `example.env` file in the project root contains an overview about configuration values that can be set for the app.
+#### Control application settings via environment variables
 
-### Control Application Settings via Env-Variables
+Copy `example.env` to `.env`, fill in the required values, and keep
+`.env` out of version control.
 
-You can provide all configuration via a `.env` file in the project root.
-Copy `example.env` to `.env`, fill in the required values (DB, SECRET_KEY, etc.), and keep this file out of version 
-control to avoid leaking secrets.
+The application database mode is controlled by `MODE`:
 
-**Database switch via MODE**
-- `MODE=prod` -> PostgreSQL, using `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` from `.env`.
-- `MODE` unset or `MODE=dev` -> SQLite at `src/db.sqlite3`; no DB env vars needed.
+-   `MODE=prod` uses PostgreSQL with `DB_NAME`, `DB_USER`,
+    `DB_PASSWORD`, `DB_HOST`, and `DB_PORT`.
+-   If `MODE` is unset or set to `dev`, the application uses SQLite at
+    `src/db.sqlite3`, according to the project settings.
+
+For Docker Compose, make sure `DB_HOST=db` and the `DB_*` credentials
+match the corresponding `POSTGRES_*` values.
+
 
 ### Models
 
@@ -112,17 +150,21 @@ Most of the views are CBV imported from _rest_framework.generics_, and they allo
 
 The behavior of some of the views had to be modified to address functionalities such as creation of order and payment, as in this case, for example, both functionalities are implemented in the same view, and so a _GenericAPIView_ was the view from which it inherits. Another example of this is the _UploadCustomerImage_ View that takes the vinyl template uploaded by the clients and creates a new product based on it.
 
-### Installation
+### Installation (Local Development)
+
+> [!NOTE]
+> These instructions are for running the application locally without Docker.
+> To start the application using Docker Compose, follow the [Quickstart](#quickstart) section.
 
 1. Clone the repo:
     ```bash
-    git clone <INSERT URL>
+    git clone git@github.com:Developer-Akademie-DevSecOpsKurs/truck-signs-api.git
     cd truck-signs-api
     ```
 1. Configure a virtual env
     ```bash
     python -m venv venv
-    venv\Scripts\activate
+    source venv/bin/activate
     ```
 1. Configure the environment variables.
     1. Copy the content of the `example.env` file that is on projects root level into a `.env` file:
